@@ -1,7 +1,10 @@
 # web-piano
  vue练习项目，web电子琴
 
-# Vue 3 + Vite
+# 项目亮点
+
+- 界面漂亮
+- 没声音
 
 This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
