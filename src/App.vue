@@ -1,7 +1,10 @@
 <template>
   <div class="piano">
     <h1>Web电子琴</h1>
-    <div class="keys">
+    <button v-if="!isAudioContextStarted" @click="initializeAudio">
+      点击以启用音频
+    </button>
+    <div v-else class="keys">
       <button
         v-for="note in notes"
         :key="note"
@@ -23,24 +26,40 @@ export default {
   name: "App",
   data() {
     return {
-      synth: null, // 合成器实例
-      notes: ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"], // 音符集合
+      synth: null,
+      notes: ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"],
+      isAudioContextStarted: false,
     };
   },
   methods: {
-    async playNote(note) {
-      // 初始化音频上下文和合成器（首次交互时）
-      if (!this.synth) {
+    async initializeAudio() {
+      try {
         console.log("Initializing audio context...");
-        await Tone.start(); // 激活 Tone.js 的音频上下文
+        await Tone.start(); // 激活音频上下文
+        this.isAudioContextStarted = true;
         this.synth = new Tone.Synth().toDestination();
+        console.log("Audio context initialized.");
+      } catch (error) {
+        console.error("Error initializing audio context:", error);
       }
-      console.log(`Playing note: ${note}`);
-      this.synth.triggerAttack(note); // 播放音符
+    },
+    playNote(note) {
+      try {
+        if (this.isAudioContextStarted) {
+          console.log(`Playing note: ${note}`);
+          this.synth.triggerAttack(note); // 播放音符
+        }
+      } catch (error) {
+        console.error("Error while playing note:", error);
+      }
     },
     stopNote() {
-      if (this.synth) {
-        this.synth.triggerRelease(); // 停止音符
+      try {
+        if (this.synth) {
+          this.synth.triggerRelease();
+        }
+      } catch (error) {
+        console.error("Error while stopping note:", error);
       }
     },
   },
