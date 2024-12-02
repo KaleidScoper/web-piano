@@ -23,25 +23,26 @@ export default {
   name: "App",
   data() {
     return {
-      synth: null,
+      synth: null, // 合成器实例
       notes: ["C4", "D4", "E4", "F4", "G4", "A4", "B4", "C5"], // 音符集合
     };
   },
   methods: {
-    playNote(note) {
-      // 播放音符
-      if (!this.synth) return;
-      this.synth.triggerAttack(note);
+    async playNote(note) {
+      // 初始化音频上下文和合成器（首次交互时）
+      if (!this.synth) {
+        console.log("Initializing audio context...");
+        await Tone.start(); // 激活 Tone.js 的音频上下文
+        this.synth = new Tone.Synth().toDestination();
+      }
+      console.log(`Playing note: ${note}`);
+      this.synth.triggerAttack(note); // 播放音符
     },
     stopNote() {
-      // 停止音符
-      if (!this.synth) return;
-      this.synth.triggerRelease();
+      if (this.synth) {
+        this.synth.triggerRelease(); // 停止音符
+      }
     },
-  },
-  mounted() {
-    // 初始化 Tone.js 合成器
-    this.synth = new Tone.Synth().toDestination();
   },
 };
 </script>
